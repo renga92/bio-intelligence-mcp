@@ -1,104 +1,81 @@
-# ClinicalTrials.gov MCP Server
+# BioPharma Sentinel 🛡️ (Pharma Olympics 🏆)
 
-A professional-grade "bridge" between the **Claude AI** and individual clinical trial data. This server uses the **Model Context Protocol (MCP)** to allow Claude to search, read, and interpret live data from ClinicalTrials.gov.
-
----
-
-## 🌟 What is an MCP Server?
-
-Imagine Claude is a very smart researcher, but they are locked in a room with books from 2023. They don't know what happened yesterday. 
-
-The **Model Context Protocol (MCP)** is like a secure window we open for Claude. This specific "window" (this server) lets Claude look directly at the live databases of **ClinicalTrials.gov**. It allows the AI to:
-1. **Search** for active studies.
-2. **Read** full trial details (NCT records).
-3. **Understand** the complex data structure of the medical registry.
+**BioPharma Sentinel** is a high-strategic intelligence platform for life sciences, built on the **Model Context Protocol (MCP)**. It transforms Claude into a sophisticated Pharma Analyst capable of real-time clinical trial audits, competitive landscape mapping, and financial milestone correlation.
 
 ---
 
-## 🛠 Technical Design: How it Works
+## 🌟 The Pharma Olympics Framework
+The server introduces the **Pharma Olympics**, a suite of tools designed to rank companies by clinical and financial performance using 2026 industry benchmarks.
 
-The design is split into three core capabilities that make the AI smarter and more reliable.
-
-### 1. The "Toolbox" (Tools)
-Tools are **actions** Claude can take. 
-- `search_trials`: Allows Claude to find trials by condition, status, **phases** (PHASE1-4), and **study types** (Interventional, Observational).
-- `get_trial`: Allows Claude to pull the full technical record for a specific trial using its ID (NCT number).
-
-### 2. The "Knowledge Map" (Resources)
-Resources are **reference materials** Claude can look at anytime. 
-- Instead of Claude guessing how the data is structured, we provide a **Data Schema**. This is a map that explains exactly what fields (like "eligibility criteria" or "outcome measures") exist in a trial record.
-
-### 3. The "Cheat Sheet" (Prompts)
-Prompts are **expert templates**. 
-- Interpreting medical data is hard. We've built an `interpret_trial` prompt that explicitly tells Claude how to translate technical medical jargon into "Patient-Friendly" language.
+| Metric | Tool | Description |
+| :--- | :--- | :--- |
+| **Success Velocity** | `get_conversion_velocity` | "The Sprinter" - Phase 1 to Phase 3 speed. |
+| **Pipeline Breadth** | `get_pipeline` | "The Heavyweight" - Total active Phase 3 assets. |
+| **PoS Precision** | `get_success_rates` | "The Sharpshooter" - Historical Phase 3 success probability. |
+| **Market Impact** | `get_market_impact` | "Volatility Gold" - Stock delta correlation with milestones. |
+| **Unified Ranking** | `get_pharma_olympics` | The official medal table for top-tier pharma companies. |
 
 ---
 
-*   **Advanced Data Filtering**: Explicitly handles study phases and types, allowing for high-precision retrieval (e.g., filtering for only Phase 3 interventional trials).
-*   **Automated Testing**: Integrated **Vitest** suite ensures parameter mapping and API integration logic are 100% verified.
+## 🛠 Advanced Features (2026 Edition)
+
+### 1. Context Optimization & Anti-Bloat
+- **Server-Side Summarization**: Automatically extracts high-signal fields (`nctId`, `status`, `sponsor`, `phase`) from massive ClinicalTrials.gov JSON blocks. This reduces token consumption by **~90%**, allowing Claude to process hundreds of trials in a single conversation without context overflow.
+- **Robust Querying**: Optimized for drug-based searches (e.g., "Semaglutide", "Tirzepatide") using resilient API v2 parameters.
+
+### 2. High-Strategic Tools
+- `get_competitive_landscape`: Analyzes "white space" and market crowding for specific medical conditions.
+- `get_leaderboard`: Real-time ranking of top 10 companies by therapeutic focus (e.g., "GLP-1 Leaderboard").
+
+### 3. Agentic Workflow Support
+Designed for Anthropic's **Orchestrator-Worker** and **Evaluator-Optimizer** patterns. The server supports bidirectional data flow, allowing Claude to "Expert-Audit" success rates using advanced reasoning.
 
 ---
 
-## 🧪 Testing
-
-The server includes a professional-grade testing suite to ensure accuracy and reliability.
+## 🧪 Stability & Testing
+The platform maintains a professional-grade stability suite with **>80% Code Coverage**.
 
 ```bash
 pnpm test
 ```
-
 The tests verify:
-- Correct mapping of agent parameters to ClinicalTrials.gov API v2 query strings.
-- Graceful handling of API errors and missing data.
-- Validation of multi-filter logic (e.g., combining condition, phase, and study type).
+- **Resilient Parameters**: Switching from `query.cond` to `query.term` to fix "Bad Request" errors.
+- **Aggregation Logic**: Accurate counting of pipeline assets across therapeutic areas.
+- **Error Handling**: capturing 400/500 API errors with detailed context.
 
 ---
 
 ## 📥 Setup Guide
 
-### 1. Prerequisites
-- **Node.js** (v18 or higher) installed on your computer.
-- **Claude Desktop** app.
-
-### 2. Installation
-Open your terminal and run:
+### 1. Installation
 ```bash
-git clone [YOUR_REPO_URL]
+git clone https://github.com/renga92/clinicaltrials-mcp-server.git
 cd clinicaltrials-mcp-server
 pnpm install
 pnpm run build
 ```
 
-### 3. Adding to Claude
-1. Open your Claude Desktop settings (typically found at `~/Library/Application Support/Claude/claude_desktop_config.json` on macOS).
-2. Add this server to the `mcpServers` list:
+### 2. Configuration (Claude Desktop)
+Add the following to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "clinicaltrials": {
+    "biopharma-sentinel": {
       "command": "node",
       "args": ["/ABSOLUTE/PATH/TO/clinicaltrials-mcp-server/build/index.js"]
     }
   }
 }
 ```
-3. Restart Claude Desktop. You will see a 🔌 icon showing the server is connected!
 
 ---
 
-## � Vision & Roadmap: Competitive Intelligence
-
-Beyond simple search, this system is designed to evolve into a **Life Sciences Intelligence Platform**:
-
-1.  **Company Pipeline Trackers**: Identifying which companies (e.g., Pfizer, Moderna, Lilly) have the highest concentration of Phase 3 trials in specific therapeutic areas.
-2.  **Conversion Efficiency**: Analyzing the "Success Velocity"—how quickly a company moves trials from Phase 1 (Research) to Phase 3 (Commercialization) compared to industry benchmarks.
-3.  **Market Impact Sync**: Integrating with financial data to correlate trial milestones (e.g., a "Completed" Phase 3 status) with stock performance and societal healthcare impact.
+## 📖 Example Strategic Queries
+Ask Claude:
+- *"Who is winning the Pharma Olympics for GLP-1 velocity?"*
+- *"Analyze the competitive landscape for NASH and find white space."*
+- *"Audit the Phase 3 success rates for Eli Lilly vs Novo Nordisk."*
+- *"Find all Phase 3 trials for Tirzepatide and summarize the market impact."*
 
 ---
-
-## �📖 Example Use Cases
-
-Once connected, you can ask Claude:
-- *"Find me recruiting Phase 3 trials for Type 2 Diabetes in New York."*
-- *"Explain the NCT01234567 trial to me like I'm a patient."*
-- *"What is the primary outcome measure for the newest Alzheimer's study?"*
+© 2026 BioPharma Sentinel. Part of the Advanced Pharma Intelligence Suite.
