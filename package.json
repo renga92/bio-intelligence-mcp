@@ -1,7 +1,7 @@
 {
-    "name": "clinicaltrials-mcp-server",
-    "version": "1.0.0",
-    "description": "MCP server for ClinicalTrials.gov API v2",
+    "name": "@biopharma/sentinel",
+    "version": "2.0.0",
+    "description": "BioPharma Sentinel: High-strategic intelligence platform for life sciences and Pharma Olympics.",
     "main": "build/index.js",
     "type": "module",
     "scripts": {
@@ -16,6 +16,7 @@
     },
     "devDependencies": {
         "@types/node": "^20.14.2",
+        "@vitest/coverage-v8": "4.0.18",
         "ts-node": "^10.9.2",
         "typescript": "^5.4.5",
         "vitest": "^4.0.18"

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ClinicalTrialsServer } from "../src/index.js";
 
-describe("ClinicalTrialsServer", () => {
+describe("BioPharma Sentinel (ClinicalTrialsServer)", () => {
     let server: ClinicalTrialsServer;
     const mockFetch = vi.fn();
 
@@ -11,50 +11,181 @@ describe("ClinicalTrialsServer", () => {
         global.fetch = mockFetch;
     });
 
-    it("should handle search_trials with complex filters (Fixing the NA concern)", async () => {
-        mockFetch.mockResolvedValueOnce({
-            ok: true,
-            json: async () => ({ studies: [] }),
+    describe("Core Stability & Context Optimization", () => {
+        it("should handle search_trials with query.term and summarize results", async () => {
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    studies: [
+                        {
+                            protocolSection: {
+                                identificationModule: { nctId: "NCT1", briefTitle: "Trial 1" },
+                                statusModule: { overallStatus: "RECRUITING" }
+                            }
+                        }
+                    ],
+                    totalCount: 1
+                }),
+            });
+
+            const result = await server.handleToolCall("search_trials", { condition: "Semaglutide" });
+            const calledUrl = mockFetch.mock.calls[0][0] as string;
+            expect(calledUrl).toContain("query.term=Semaglutide");
+            expect(result.content[0].text).toContain("Trial 1");
+            expect(result.content[0].text).not.toContain("protocolSection");
         });
 
-        const args = {
-            condition: "Alzheimer",
-            phases: ["PHASE3"],
-            studyTypes: ["INTERVENTIONAL"],
-            maxResults: 10
-        };
+        it("should handle get_pipeline and aggregate results by condition", async () => {
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    studies: [
+                        { protocolSection: { conditionsModule: { conditions: ["Obesity"] } } },
+                        { protocolSection: { conditionsModule: { conditions: ["Diabetes"] } } },
+                        { protocolSection: { conditionsModule: { conditions: ["Obesity"] } } }
+                    ]
+                }),
+            });
 
-        await server.handleToolCall("search_trials", args);
+            const result = await server.handleToolCall("get_pipeline", { company: "Novo Nordisk" });
+            expect(result.content[0].text).toContain('"count": 2');
+            expect(result.content[0].text).toContain("Obesity");
+            expect(result.content[0].text).toContain("Diabetes");
+        });
 
-        const calledUrl = mockFetch.mock.calls[0][0] as string;
+        it("should handle get_conversion_velocity and calculate average years", async () => {
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    studies: [
+                        {
+                            protocolSection: {
+                                armsInterventionsModule: { interventions: [{ name: "Drug A" }] },
+                                designModule: { phases: ["PHASE1"] },
+                                statusModule: { startDateStruct: { date: "2020-01-01" } }
+                            }
+                        },
+                        {
+                            protocolSection: {
+                                armsInterventionsModule: { interventions: [{ name: "Drug A" }] },
+                                designModule: { phases: ["PHASE3"] },
+                                statusModule: { completionDateStruct: { date: "2024-01-01" } }
+                            }
+                        }
+                    ]
+                })
+            });
 
-        expect(calledUrl).toContain("query.cond=Alzheimer");
-        expect(calledUrl).toContain("filter.phases=PHASE3");
-        expect(calledUrl).toContain("filter.studyTypes=INTERVENTIONAL");
-        expect(calledUrl).toContain("pageSize=10");
+            const result = await server.handleToolCall("get_conversion_velocity", { company: "Pfizer" });
+            expect(result.content[0].text).toContain("4.00 years");
+        });
     });
 
-    it("should handle get_trial correctly", async () => {
-        mockFetch.mockResolvedValueOnce({
-            ok: true,
-            json: async () => ({ nctId: "NCT123" }),
+    describe("Pharma Olympics Metrics", () => {
+        it("should calculate success rates (The Sharpshooter)", async () => {
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    studies: [
+                        { protocolSection: { statusModule: { overallStatus: "COMPLETED" } }, hasResults: true },
+                        { protocolSection: { statusModule: { overallStatus: "TERMINATED" } }, hasResults: false }
+                    ],
+                    totalCount: 2
+                })
+            });
+
+            const result = await server.handleToolCall("get_success_rates", { company: "Pfizer" });
+            expect(result.content[0].text).toContain("50.0%");
         });
 
-        await server.handleToolCall("get_trial", { nctId: "NCT123" });
+        it("should return competitive landscape and handle leadSponsor fallbacks", async () => {
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    studies: [
+                        { protocolSection: { identificationModule: { leadSponsor: { name: "Company A" } } } },
+                        { protocolSection: { identificationModule: { organization: { name: "Company B" } } } }
+                    ]
+                })
+            });
 
-        const calledUrl = mockFetch.mock.calls[0][0] as string;
-        expect(calledUrl).toContain("/studies/NCT123");
+            const result = await server.handleToolCall("get_competitive_landscape", { condition: "NASH" });
+            expect(result.content[0].text).toContain("Company A: 1");
+            expect(result.content[0].text).toContain("Low (White Space)");
+        });
+
+        it("should handle get_market_impact with ticker lookup", async () => {
+            mockFetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    protocolSection: {
+                        identificationModule: { briefTitle: "Lilly Trial" },
+                        statusModule: { completionDateStruct: { date: "2023-01-01" } }
+                    }
+                })
+            });
+
+            const result = await server.handleToolCall("get_market_impact", { company: "Eli Lilly", nctId: "NCT123" });
+            expect(result.content[0].text).toContain("LLY");
+            expect(result.content[0].text).toContain("Lilly Trial");
+        });
+
+        it("should return the medal table for Pharma Olympics", async () => {
+            const categories = ["sprinter", "heavyweight", "sharpshooter", "volatility", "overall"];
+            for (const cat of categories) {
+                const result = await server.handleToolCall("get_pharma_olympics", { category: cat });
+                expect(result.content[0].text).toContain("🥇");
+            }
+        });
+
+        it("should handle get_leaderboard for pipeline_size", async () => {
+            mockFetch.mockResolvedValue({
+                ok: true,
+                json: async () => ({ totalCount: 50 })
+            });
+
+            const result = await server.handleToolCall("get_leaderboard", { metric: "pipeline_size", focus: "GLP-1" });
+            expect(result.content[0].text).toContain("GLP-1 Pipeline Leaderboard");
+            expect(result.content[0].text).toContain("🥈");
+        });
+
+        it("should handle get_leaderboard for velocity benchmarks", async () => {
+            const result = await server.handleToolCall("get_leaderboard", { metric: "velocity" });
+            expect(result.content[0].text).toContain("Success Velocity");
+            expect(result.content[0].text).toContain("Moderna");
+        });
     });
 
-    it("should return error content on API failure", async () => {
-        mockFetch.mockResolvedValueOnce({
-            ok: false,
-            statusText: "Unauthorized",
+    describe("Error Handling & Edge Cases", () => {
+        it("should display detailed API error messages with response body", async () => {
+            mockFetch.mockResolvedValueOnce({
+                ok: false,
+                status: 400,
+                statusText: "Bad Request",
+                text: async () => "Detailed error message"
+            });
+
+            const result = await server.handleToolCall("search_trials", { condition: "Invalid" });
+            expect(result.isError).toBe(true);
+            expect(result.content[0].text).toContain("400 Bad Request - Detailed error message");
         });
 
-        const result = await server.handleToolCall("get_trial", { nctId: "NCT123" });
+        it("should handle the 'Bad Request' fallback in handleToolCall specifically", async () => {
+            mockFetch.mockResolvedValueOnce({
+                ok: false,
+                status: 400,
+                statusText: "Bad Request",
+                text: async () => "API Error"
+            });
+            const result = await server.handleToolCall("get_pipeline", { company: "Unknown" });
+            expect(result.isError).toBe(true);
+            expect(result.content[0].text).toContain("400 Bad Request");
+        });
 
-        expect(result.isError).toBe(true);
-        expect(result.content[0].text).toContain("Unauthorized");
+        it("should handle tool not found", async () => {
+            const result = await server.handleToolCall("unknown", {});
+            expect(result.isError).toBe(true);
+            expect(result.content[0].text).toContain("Tool not found");
+        });
     });
 });
