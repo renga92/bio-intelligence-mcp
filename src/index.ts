@@ -55,6 +55,8 @@ const server = new Server(
     {
         capabilities: {
             tools: {},
+            resources: {},
+            prompts: {},
         },
     }
 );
@@ -62,6 +64,80 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
     tools: [SEARCH_TRIALS_TOOL, GET_TRIAL_TOOL],
 }));
+
+// Added Resources
+server.setRequestHandler(z.object({ method: z.literal("resources/list") }), async () => ({
+    resources: [
+        {
+            uri: "clinicaltrials://schema",
+            name: "ClinicalTrials.gov Data Schema",
+            mimeType: "application/json",
+            description: "Schema describing the structure of ClinicalTrials.gov v2 study objects",
+        },
+    ],
+}));
+
+server.setRequestHandler(z.object({ method: z.literal("resources/read") }), async (request: any) => {
+    if (request.params.uri === "clinicaltrials://schema") {
+        return {
+            contents: [
+                {
+                    uri: "clinicaltrials://schema",
+                    mimeType: "application/json",
+                    text: JSON.stringify({
+                        study: {
+                            nctId: "NCT string",
+                            protocolSection: {
+                                identificationModule: "Trial IDs and titles",
+                                statusModule: "Overall status",
+                                descriptionModule: "Brief and detailed summaries",
+                                conditionsModule: "Medical conditions",
+                                designModule: "Study type, phase, and design",
+                            },
+                        },
+                    }, null, 2),
+                },
+            ],
+        };
+    }
+    throw new Error("Resource not found");
+});
+
+// Added Prompts
+server.setRequestHandler(z.object({ method: z.literal("prompts/list") }), async () => ({
+    prompts: [
+        {
+            name: "interpret_trial",
+            description: "Interpret a complex clinical trial record for a patient",
+            arguments: [
+                {
+                    name: "trialData",
+                    description: "The JSON study data from get_trial",
+                    required: true,
+                },
+            ],
+        },
+    ],
+}));
+
+server.setRequestHandler(z.object({ method: z.literal("prompts/get") }), async (request: any) => {
+    if (request.params.name === "interpret_trial") {
+        const trialData = request.params.arguments?.trialData;
+        return {
+            description: "Interpret a complex clinical trial record",
+            messages: [
+                {
+                    role: "user",
+                    content: {
+                        type: "text",
+                        text: `Please interpret the following clinical trial data in patient-friendly language. Explain the goal, eligibility criteria, and clinical trial status:\n\n${trialData}`,
+                    },
+                },
+            ],
+        };
+    }
+    throw new Error("Prompt not found");
+});
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params;
