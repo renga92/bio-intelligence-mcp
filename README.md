@@ -34,9 +34,9 @@ Prompts are **expert templates**.
 
 ---
 
-## 🚀 What makes this "Optimized"?
+## 🚀 Technical Optimizations
 
-If you are explaining this in an interview, here are the technical decisions we made to make it state-of-the-art:
+The following architectural choices ensure this server is robust, secure, and production-ready:
 
 *   **Type Safety (Zod)**: We use a library called `Zod` to validate every request Claude makes. If Claude tries to send a "broken" request, the server catches it immediately. This prevents the AI from "hallucinating" or crashing.
 *   **Modern API v2**: The US government updated their systems in late 2024. This server uses the **API v2 (OpenAPI 3.0)** standard, making it faster and more accurate than older tools.
