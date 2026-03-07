@@ -55,8 +55,8 @@ Open your terminal and run:
 ```bash
 git clone [YOUR_REPO_URL]
 cd clinicaltrials-mcp-server
-npm install
-npm run build
+pnpm install
+pnpm run build
 ```
 
 ### 3. Adding to Claude
@@ -76,7 +76,17 @@ npm run build
 
 ---
 
-## 📖 Example Use Cases
+## � Vision & Roadmap: Competitive Intelligence
+
+Beyond simple search, this system is designed to evolve into a **Life Sciences Intelligence Platform**:
+
+1.  **Company Pipeline Trackers**: Identifying which companies (e.g., Pfizer, Moderna, Lilly) have the highest concentration of Phase 3 trials in specific therapeutic areas.
+2.  **Conversion Efficiency**: Analyzing the "Success Velocity"—how quickly a company moves trials from Phase 1 (Research) to Phase 3 (Commercialization) compared to industry benchmarks.
+3.  **Market Impact Sync**: Integrating with financial data to correlate trial milestones (e.g., a "Completed" Phase 3 status) with stock performance and societal healthcare impact.
+
+---
+
+## �📖 Example Use Cases
 
 Once connected, you can ask Claude:
 - *"Find me recruiting Phase 3 trials for Type 2 Diabetes in New York."*
