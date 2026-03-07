@@ -21,7 +21,7 @@ The design is split into three core capabilities that make the AI smarter and mo
 
 ### 1. The "Toolbox" (Tools)
 Tools are **actions** Claude can take. 
-- `search_trials`: Allows Claude to find trials by condition (e.g., "Parkinsons") and status (e.g., "Recruiting").
+- `search_trials`: Allows Claude to find trials by condition, status, **phases** (PHASE1-4), and **study types** (Interventional, Observational).
 - `get_trial`: Allows Claude to pull the full technical record for a specific trial using its ID (NCT number).
 
 ### 2. The "Knowledge Map" (Resources)
@@ -34,13 +34,23 @@ Prompts are **expert templates**.
 
 ---
 
-## 🚀 Technical Optimizations
+*   **Advanced Data Filtering**: Explicitly handles study phases and types, allowing for high-precision retrieval (e.g., filtering for only Phase 3 interventional trials).
+*   **Automated Testing**: Integrated **Vitest** suite ensures parameter mapping and API integration logic are 100% verified.
 
-The following architectural choices ensure this server is robust, secure, and production-ready:
+---
 
-*   **Type Safety (Zod)**: We use a library called `Zod` to validate every request Claude makes. If Claude tries to send a "broken" request, the server catches it immediately. This prevents the AI from "hallucinating" or crashing.
-*   **Modern API v2**: The US government updated their systems in late 2024. This server uses the **API v2 (OpenAPI 3.0)** standard, making it faster and more accurate than older tools.
-*   **Asynchronous Processing**: The server uses modern JavaScript "Async/Await" logic, meaning it can wait for the government database to respond without freezing the rest of the application.
+## 🧪 Testing
+
+The server includes a professional-grade testing suite to ensure accuracy and reliability.
+
+```bash
+pnpm test
+```
+
+The tests verify:
+- Correct mapping of agent parameters to ClinicalTrials.gov API v2 query strings.
+- Graceful handling of API errors and missing data.
+- Validation of multi-filter logic (e.g., combining condition, phase, and study type).
 
 ---
 
