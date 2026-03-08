@@ -25,20 +25,22 @@ export async function handleGetLeaderboard(args: any, callTool: (n: string, a: a
         const results = await Promise.all(
             Object.entries(companyAliases).map(([canonical, aliases]) =>
                 limit(async () => {
-                    let totalCount = 0;
-                    for (const alias of aliases) {
-                        let queryParts = [`query.spons=${encodeURIComponent(alias)}`];
-                        if (focus) queryParts.push(`query.cond=${encodeURIComponent(focus)}`);
-                        const query = queryParts.join("&");
-                        const url = `https://clinicaltrials.gov/api/v2/studies?${query}&countTotal=true&pageSize=1`;
-                        const res = await fetchWithRetry(url);
-                        if (!res.ok) {
-                            console.error(`Leaderboard fetch error for ${alias}: ${res.statusText}`);
-                            continue;
-                        }
-                        const data = await res.json();
-                        totalCount += data.totalCount || 0;
-                    }
+                    const aliasResults = await Promise.all(
+                        aliases.map(async (alias) => {
+                            let queryParts = [`query.spons=${encodeURIComponent(alias)}`];
+                            if (focus) queryParts.push(`query.cond=${encodeURIComponent(focus)}`);
+                            const query = queryParts.join("&");
+                            const url = `https://clinicaltrials.gov/api/v2/studies?${query}&countTotal=true&pageSize=1`;
+                            const res = await fetchWithRetry(url);
+                            if (!res.ok) {
+                                console.error(`Leaderboard fetch error for ${alias}: ${res.statusText}`);
+                                return 0;
+                            }
+                            const data = await res.json();
+                            return data.totalCount || 0;
+                        })
+                    );
+                    const totalCount = aliasResults.reduce((sum, count) => sum + count, 0);
                     return { company: canonical, count: totalCount };
                 })
             )
