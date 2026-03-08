@@ -1,5 +1,4 @@
 import { fetchWithRetry } from "@biopharma/shared";
-import { config } from "@biopharma/shared";
 
 export async function handleGetSuccessRates(args: any) {
     const { company, condition } = args;

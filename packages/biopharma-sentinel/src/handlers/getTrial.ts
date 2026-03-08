@@ -1,5 +1,4 @@
 import { fetchWithRetry } from "@biopharma/shared";
-import { config } from "@biopharma/shared";
 
 export async function handleGetTrial(args: any) {
 const { nctId } = args;

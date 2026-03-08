@@ -1,6 +1,3 @@
-import { fetchWithRetry } from "@biopharma/shared";
-import { config } from "@biopharma/shared";
-
 export async function handleGetPharmaOlympics(args: any, callTool: (n: string, a: any) => Promise<any>) {
     const { category = "overall" } = args;
 

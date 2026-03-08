@@ -1,5 +1,4 @@
 import { fetchWithRetry } from "@biopharma/shared";
-import { config } from "@biopharma/shared";
 
 export async function handleGetLeaderboard(args: any, callTool: (n: string, a: any) => Promise<any>) {
     const { metric, focus } = args;
