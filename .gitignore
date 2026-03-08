@@ -38,3 +38,4 @@ Desktop.ini
 
 # Evals and other local data
 evals/
+tsconfig.tsbuildinfo
