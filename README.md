@@ -1,47 +1,42 @@
-# BioPharma Sentinel 🛡️ (Pharma Olympics 🏆)
+# BioPharma Sentinel 🛡️ 
 
-**BioPharma Sentinel** is a high-strategic intelligence platform for life sciences, built on the **Model Context Protocol (MCP)**. It transforms Claude into a sophisticated Pharma Analyst capable of real-time clinical trial audits, competitive landscape mapping, and financial milestone correlation.
-
----
-
-## 🌟 The Pharma Olympics Framework
-The server introduces the **Pharma Olympics**, a suite of tools designed to rank companies by clinical and financial performance using 2026 industry benchmarks.
-
-| Metric | Tool | Description |
-| :--- | :--- | :--- |
-| **Success Velocity** | `get_conversion_velocity` | "The Sprinter" - Phase 1 to Phase 3 speed. |
-| **Pipeline Breadth** | `get_pipeline` | "The Heavyweight" - Total active Phase 3 assets. |
-| **PoS Precision** | `get_success_rates` | "The Sharpshooter" - Historical Phase 3 success probability. |
-| **Market Impact** | `get_market_impact` | "Volatility Gold" - Stock delta correlation with milestones. |
-| **Unified Ranking** | `get_pharma_olympics` | The official medal table for top-tier pharma companies. |
+**BioPharma Sentinel** is a high-strategic intelligence platform for life sciences, built on the **Model Context Protocol (MCP)**. It transforms Claude into a sophisticated Pharma Analyst capable of real-time clinical trial audits, competitive landscape mapping, regulatory cross-referencing, and financial milestone correlation.
 
 ---
 
-## 🛠 Advanced Features (2026 Edition)
+## 🌟 Capabilities & Tools (v2 Platform)
+BioPharma Sentinel provides a comprehensive suite of 17 analytical tools.
 
-### 1. Context Optimization & Anti-Bloat
-- **Server-Side Summarization**: Automatically extracts high-signal fields (`nctId`, `status`, `sponsor`, `phase`) from massive ClinicalTrials.gov JSON blocks. This reduces token consumption by **~90%**, allowing Claude to process hundreds of trials in a single conversation without context overflow.
-- **Robust Querying**: Optimized for drug-based searches (e.g., "Semaglutide", "Tirzepatide") using resilient API v2 parameters.
+### 1. The Pharma Olympics Framework 🏆
+Rank companies by clinical and financial performance using dynamic benchmarks.
+- `get_pharma_olympics`: Unified medal table for top-tier pharma companies.
+- `get_leaderboard`: Real-time ranking of top 10 companies by therapeutic focus.
+- `get_conversion_velocity`: "The Sprinter" - Phase 1 to Phase 3 speed.
+- `get_pipeline`: "The Heavyweight" - Total active Phase 3 assets.
+- `get_success_rates`: "The Sharpshooter" - Historical Phase 3 success probability.
+- `get_market_impact`: "Volatility Gold" - Stock delta correlation with milestones (Alpha Vantage).
 
-### 2. High-Strategic Tools
-- `get_competitive_landscape`: Analyzes "white space" and market crowding for specific medical conditions.
-- `get_leaderboard`: Real-time ranking of top 10 companies by therapeutic focus (e.g., "GLP-1 Leaderboard").
+### 2. Market & Competitive Intelligence 📊
+Discover white space and perform head-to-head analysis.
+- `get_competitive_landscape`: Analyzes market crowding for specific medical conditions.
+- `compare_companies`: Head-to-head competitive comparison across pipeline, velocity, and success metrics.
+- `get_company_deep_dive`: Full 360° intelligence report on a single pharma company.
 
-### 3. Agentic Workflow Support
-Designed for Anthropic's **Orchestrator-Worker** and **Evaluator-Optimizer** patterns. The server supports bidirectional data flow, allowing Claude to "Expert-Audit" success rates using advanced reasoning.
+### 3. Comprehensive Trial Analytics 🔬
+- `search_trials`: Advanced resilient search across ClinicalTrials.gov v2.
+- `get_trial` & `get_trial_timeline`: Deep data and milestone extraction for specific trials.
+- `get_geographic_intelligence`: Map geographic distribution, sites, and country footprints.
+- `get_modality_breakdown`: Analyze therapeutic mix (Small Molecule, Biologic, Genetic, Device).
+- `get_enrollment_intelligence`: Trial duration, site density, and participant velocity tracking.
+- `get_endpoint_landscape`: Identify prevalent primary endpoints and outcome measures.
+- `get_regulatory_landscape`: Cross-reference trial activity with FDA approval status (OpenFDA).
 
 ---
 
-## 🧪 Stability & Testing
-The platform maintains a professional-grade stability suite with **>80% Code Coverage**.
-
-```bash
-pnpm test
-```
-The tests verify:
-- **Resilient Parameters**: Switching from `query.cond` to `query.term` to fix "Bad Request" errors.
-- **Aggregation Logic**: Accurate counting of pipeline assets across therapeutic areas.
-- **Error Handling**: capturing 400/500 API errors with detailed context.
+## 🛠 Advanced Architecture
+- **Server-Side Mitigation**: Intelligent payload projection (`&fields=`) and auto-summarization reduce token consumption by **~90%**, eliminating context bloat.
+- **Resilient Infrastructure**: Built-in 429 Rate Limiting handling via `p-limit` concurrency arrays and `fetchWithRetry` adapters.
+- **Modular Handlers**: Extensible V2 architecture isolating endpoints cleanly in `src/handlers/`.
 
 ---
 
@@ -55,14 +50,24 @@ pnpm install
 pnpm run build
 ```
 
-### 2. Configuration (Claude Desktop)
+### 2. Environment Variables (.env)
+```env
+ALPHA_VANTAGE_API_KEY=your_key_here
+MAX_PAGES=10
+RATE_LIMIT_DELAY_MS=300
+```
+
+### 3. Configuration (Claude Desktop)
 Add the following to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
     "biopharma-sentinel": {
       "command": "node",
-      "args": ["/ABSOLUTE/PATH/TO/clinicaltrials-mcp-server/build/index.js"]
+      "args": ["/ABSOLUTE/PATH/TO/clinicaltrials-mcp-server/build/index.js"],
+      "env": {
+        "ALPHA_VANTAGE_API_KEY": "YOUR_KEY"
+      }
     }
   }
 }
@@ -70,12 +75,13 @@ Add the following to your `claude_desktop_config.json`:
 
 ---
 
+## 🧪 Stability & Testing
+The platform maintains a professional-grade stability suite utilizing Test-Driven Development (TDD). 
+Run tests via `pnpm test`. Coverage includes core optimizations, parameter resiliency, and integrated live API fallback testing.
+
 ## 📖 Example Strategic Queries
 Ask Claude:
 - *"Who is winning the Pharma Olympics for GLP-1 velocity?"*
 - *"Analyze the competitive landscape for NASH and find white space."*
 - *"Audit the Phase 3 success rates for Eli Lilly vs Novo Nordisk."*
-- *"Find all Phase 3 trials for Tirzepatide and summarize the market impact."*
-
----
-© 2026 BioPharma Sentinel. Part of the Advanced Pharma Intelligence Suite.
+- *"Give me a deep dive on Moderna's modality breakdown and pipeline."*

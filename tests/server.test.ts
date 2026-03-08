@@ -8,7 +8,7 @@ describe("BioPharma Sentinel (ClinicalTrialsServer)", () => {
     beforeEach(() => {
         server = new ClinicalTrialsServer();
         mockFetch.mockClear();
-        global.fetch = mockFetch;
+        (globalThis as any).fetch = mockFetch;
     });
 
     describe("Core Stability & Context Optimization", () => {
@@ -28,9 +28,10 @@ describe("BioPharma Sentinel (ClinicalTrialsServer)", () => {
                 }),
             });
 
-            const result = await server.handleToolCall("search_trials", { condition: "Semaglutide" });
+            const result = await server.handleToolCall("search_trials", { condition: "Semaglutide", phases: ["PHASE3"] });
             const calledUrl = mockFetch.mock.calls[0][0] as string;
             expect(calledUrl).toContain("query.term=Semaglutide");
+            expect(calledUrl).toContain("aggFilters=phase:3");
             expect(result.content[0].text).toContain("Trial 1");
             expect(result.content[0].text).not.toContain("protocolSection");
         });
@@ -103,7 +104,7 @@ describe("BioPharma Sentinel (ClinicalTrialsServer)", () => {
                 ok: true,
                 json: async () => ({
                     studies: [
-                        { protocolSection: { identificationModule: { leadSponsor: { name: "Company A" } } } },
+                        { protocolSection: { sponsorCollaboratorsModule: { leadSponsor: { name: "Company A" } }, identificationModule: {} } },
                         { protocolSection: { identificationModule: { organization: { name: "Company B" } } } }
                     ]
                 })
@@ -111,6 +112,7 @@ describe("BioPharma Sentinel (ClinicalTrialsServer)", () => {
 
             const result = await server.handleToolCall("get_competitive_landscape", { condition: "NASH" });
             expect(result.content[0].text).toContain("Company A: 1");
+            expect(result.content[0].text).toContain("Company B: 1");
             expect(result.content[0].text).toContain("Low (White Space)");
         });
 
