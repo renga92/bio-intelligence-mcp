@@ -3,7 +3,7 @@ import { fetchWithRetry } from "../utils/fetchWithRetry.js";
 export async function handleGetRegulatoryLandscape(args: any) {
     const { drug, company } = args;
 
-    const fdaUrl = `https://api.fda.gov/drug/drugsfda.json?search=active_ingredients.name:"${encodeURIComponent(drug)}"&limit=10`;
+    const fdaUrl = `https://api.fda.gov/drug/drugsfda.json?search=products.active_ingredients.name:"${encodeURIComponent(drug)}"&limit=10`;
 
     try {
         const res = await fetchWithRetry(fdaUrl);

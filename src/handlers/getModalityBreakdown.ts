@@ -8,6 +8,9 @@ export async function handleGetModalityBreakdown(args: any) {
         "Biologic": 0,
         "Genetic": 0,
         "Device": 0,
+        "Procedure": 0,
+        "Behavioral": 0,
+        "Dietary Supplement": 0,
         "Other": 0
     };
     let totalInterventions = 0;
@@ -31,6 +34,9 @@ export async function handleGetModalityBreakdown(args: any) {
                 else if (type === "BIOLOGICAL") modalities["Biologic"]++;
                 else if (type === "GENETIC") modalities["Genetic"]++;
                 else if (type === "DEVICE") modalities["Device"]++;
+                else if (type === "PROCEDURE") modalities["Procedure"]++;
+                else if (type === "BEHAVIORAL") modalities["Behavioral"]++;
+                else if (type === "DIETARY_SUPPLEMENT") modalities["Dietary Supplement"]++;
                 else modalities["Other"]++;
                 totalInterventions++;
             });

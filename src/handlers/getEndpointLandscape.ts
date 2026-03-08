@@ -9,7 +9,9 @@ const KEYWORDS = [
     { label: "Adverse Events (Safety)", keys: ["adverse event", "safety", "tolerability", "maximum tolerated dose", " dlt "] },
     { label: "Pharmacokinetics (PK)", keys: ["pharmacokinetic", " pk ", " cmax ", " auc "] },
     { label: "Quality of Life", keys: ["quality of life", " qol "] },
-    { label: "Biomarker / Laboratory", keys: ["biomarker", "hba1c", "cholesterol", "blood pressure"] }
+    { label: "Cardiovascular Events", keys: ["mace", "cardiovascular event", "myocardial infarction", "stroke"] },
+    { label: "Cognitive Function", keys: ["adas-cog", "adas cog", "cdr-sb", "cdr sb", "mmse", "cognitive"] },
+    { label: "Biomarker / Laboratory", keys: ["biomarker", "hba1c", "cholesterol", "blood pressure", "amyloid", "pet "] }
 ];
 
 function classifyEndpoint(measure: string): string {

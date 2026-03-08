@@ -16,11 +16,17 @@ export async function handleGetTrialTimeline(args: any) {
         const studyComp = statusModule.completionDateStruct?.date || "Unknown";
         const lastUpdate = statusModule.lastUpdatePostDateStruct?.date || "Unknown";
         const status = statusModule.overallStatus || "Unknown";
+        const enrollment = data.protocolSection?.designModule?.enrollmentInfo?.count || "Unknown";
+        const resultsPosted = statusModule.resultsFirstPostDateStruct?.date || "Not Posted";
+        const primaryOutcomes = data.protocolSection?.outcomesModule?.primaryOutcomes?.map((o: any) => o.measure).join("; ") || "Unknown";
 
         const timeline = [
             `Start Date: ${start}`,
+            `Enrollment: ${enrollment} patients`,
+            `Primary Endpoints: ${primaryOutcomes}`,
             `Primary Completion: ${primaryComp}`,
             `Study Completion: ${studyComp}`,
+            `Results Posted: ${resultsPosted}`,
             `Last Update: ${lastUpdate}`,
             `Overall Status: ${status}`
         ];

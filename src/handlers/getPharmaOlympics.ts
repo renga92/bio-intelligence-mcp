@@ -18,15 +18,14 @@ export async function handleGetPharmaOlympics(args: any, callTool: (n: string, a
         const liveOlympicsPromise = (async () => {
             const m = await callTool("get_leaderboard", { metric: "pipeline_size" });
             if (m.isError) throw new Error();
-            return "Live API returned data successfully. Full Live Medal Table generation is active via get_leaderboard calls.";
+            tables.heavyweight = m.content[0].text.replace("🏆 Pharma Olympics: Overall Pipeline Leaderboard\n\n", "");
+            return "Live API returned data successfully.";
         })();
 
-        const liveRes = await Promise.race([
+        await Promise.race([
             liveOlympicsPromise,
-            new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 2000))
+            new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 3000))
         ]);
-        // Used as a sanity check. Real integration of buildLiveOlympics to dynamically shape tables goes here.
-        console.error(liveRes);
     } catch (e) {
         console.error("Live Olympics builder timed out or failed, using static benchmarks");
     }

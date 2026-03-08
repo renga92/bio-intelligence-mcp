@@ -5,8 +5,8 @@ export async function handleGetEnrollmentIntelligence(args: any) {
     const { condition, company } = args;
 
     let queryParts = [];
-    if (condition) queryParts.push(`query.term=${encodeURIComponent(condition)}`);
-    if (company) queryParts.push(`query.term=${encodeURIComponent(company)}`);
+    if (condition) queryParts.push(`query.cond=${encodeURIComponent(condition)}`);
+    if (company) queryParts.push(`query.spons=${encodeURIComponent(company)}`);
     const query = queryParts.join("&");
 
     let nextPageToken: string | null = null;
