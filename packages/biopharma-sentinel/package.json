@@ -1,0 +1,27 @@
+{
+    "name": "@biopharma/sentinel",
+    "version": "2.0.0",
+    "description": "BioPharma Sentinel: High-strategic intelligence platform for life sciences and Pharma Olympics.",
+    "main": "build/index.js",
+    "type": "module",
+    "scripts": {
+        "build": "tsc",
+        "start": "node build/index.js",
+        "dev": "tsc --watch",
+        "test": "vitest run"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.0.1",
+        "@biopharma/shared": "workspace:*",
+        "dotenv": "^17.3.1",
+        "p-limit": "^7.3.0",
+        "zod": "^3.23.8"
+    },
+    "devDependencies": {
+        "@types/node": "^25.3.5",
+        "@vitest/coverage-v8": "4.0.18",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.9.3",
+        "vitest": "^4.0.18"
+    }
+}

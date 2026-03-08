@@ -1,0 +1,22 @@
+{
+    "name": "@biopharma/shared",
+    "version": "1.0.0",
+    "main": "build/index.js",
+    "types": "build/index.d.ts",
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./build/index.js",
+            "types": "./build/index.d.ts"
+        }
+    },
+    "scripts": {
+        "build": "tsc"
+    },
+    "dependencies": {
+        "dotenv": "^16.0.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.0"
+    }
+}
