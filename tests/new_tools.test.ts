@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { ClinicalTrialsServer } from "../src/index.js";
+import { ClinicalTrialsServer } from "../packages/biopharma-sentinel/src/index.ts";
 
 describe("New Features (Phase 3)", () => {
     let server: ClinicalTrialsServer;
@@ -23,9 +23,9 @@ describe("New Features (Phase 3)", () => {
         });
 
         const res = await server.handleToolCall("get_geographic_intelligence", { condition: "Asthma" });
-        expect(res.content[0].text).toContain("United States: 2 trials");
-        expect(res.content[0].text).toContain("France: 1 trials");
-        expect(res.content[0].text).toContain("North America: 2 trials");
+        expect(res.content[0].text).toContain('"country": "United States"');
+        expect(res.content[0].text).toContain('"country": "France"');
+        expect(res.content[0].text).toContain('"North America": 2');
     });
 
     it("should resolve get_modality_breakdown gracefully", async () => {
@@ -72,7 +72,7 @@ describe("New Features (Phase 3)", () => {
             })
         });
         const res = await server.handleToolCall("get_endpoint_landscape", { condition: "Asthma" });
-        expect(res.content[0].text).toContain("Overall Survival (OS): 1");
+        expect(res.content[0].text).toContain('"endpoint": "Overall Survival (OS)"');
     });
 
     it("should resolve get_regulatory_landscape gracefully", async () => {

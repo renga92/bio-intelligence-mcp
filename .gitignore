@@ -6,6 +6,9 @@ node_modules/
 build/
 dist/
 
+# Test coverage
+coverage/
+
 # Environment variables
 .env
 .env.local
