@@ -5,7 +5,7 @@
 ---
 
 ## 🌟 Capabilities & Tools (v2 Platform)
-BioPharma Sentinel provides a comprehensive suite of 17 analytical tools.
+BioPharma Sentinel provides a comprehensive suite of 17 analytical tools. For detailed strategic use-cases and deep-dives of the intelligence tools, see the [Tools Documentation](docs/tools.md).
 
 ### 1. The Pharma Olympics Framework 🏆
 Rank companies by clinical and financial performance using dynamic benchmarks.
